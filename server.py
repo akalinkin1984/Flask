@@ -5,6 +5,7 @@ from flask_bcrypt import Bcrypt
 from pydantic import ValidationError
 from sqlalchemy.exc import IntegrityError
 
+
 from models import Session, Advertisement, User
 from schema import CreateAdv, UpdateAdv, CreateUser, UpdateUser
 
@@ -72,7 +73,7 @@ def add_adv(adv: Advertisement):
 def get_user(user_id):
     user = request.session.get(User, user_id)
     if user is None:
-        raise HttpError(404, 'Юзер не найден')
+        raise HttpError(404, 'Пользователь не найден')
     return user
 
 
@@ -81,7 +82,7 @@ def add_user(user: User):
         request.session.add(user)
         request.session.commit()
     except IntegrityError:
-        raise HttpError(409, 'Пользователь уже существует')
+        raise HttpError(409, 'Пользователь с таким email уже существует')
     return user
 
 
@@ -100,9 +101,12 @@ class AdvView(MethodView):
     def patch(self, adv_id: int):
         json_data = validate_json(request.json, UpdateAdv)
         adv = get_adv(adv_id)
-        for field, value in json_data.items():
-            setattr(adv, field, value)
-        adv = add_adv(adv)
+        if adv.owner == json_data['owner']:
+            for field, value in json_data.items():
+                setattr(adv, field, value)
+            adv = add_adv(adv)
+        else:
+            raise HttpError(403, 'Недостаточно прав')
         return jsonify(adv.json)
 
     def delete(self, adv_id: int):
@@ -136,7 +140,7 @@ class UserView(MethodView):
         return jsonify(user.json)
 
     def delete(self, user_id: int):
-        user = get_adv(user_id)
+        user = get_user(user_id)
         request.session.delete(user)
         request.session.commit()
         return jsonify({'status': 'Пользователь удален'})
@@ -149,6 +153,6 @@ app.add_url_rule('/adv/', view_func=adv_view, methods=['POST'])
 app.add_url_rule('/adv/<int:adv_id>/', view_func=adv_view, methods=['GET', 'PATCH', 'DELETE'])
 
 app.add_url_rule('/user/', view_func=user_view, methods=['POST'])
-app.add_url_rule('/user/<int:adv_id>/', view_func=user_view, methods=['GET', 'PATCH', 'DELETE'])
+app.add_url_rule('/user/<int:user_id>/', view_func=user_view, methods=['GET', 'PATCH', 'DELETE'])
 
 app.run()

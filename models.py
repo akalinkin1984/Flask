@@ -26,11 +26,11 @@ class Base(DeclarativeBase):
 
 
 class User(Base):
-    __tablename__ = 'user'
+    __tablename__ = 'users'
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    name: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
-    mail: Mapped[str] = mapped_column(String(128), unique=True)
+    name: Mapped[str] = mapped_column(String(64), nullable=False)
+    email: Mapped[str] = mapped_column(String(128), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(String(72), nullable=False)
 
     @property
@@ -38,7 +38,7 @@ class User(Base):
         return {
             'id': self.id,
             'name': self.name,
-            'mail': self.mail
+            'email': self.email
         }
 
 
