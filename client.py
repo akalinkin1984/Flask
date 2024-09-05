@@ -1,64 +1,30 @@
 import requests
 
 
-# Запросы для объявлений
-
-# response = requests.post(
-#     'http://127.0.0.1:5000/adv',
-#     json = {'title': 'New Oбъявление',
-#             'description': 'hard',
-#             'owner': 5}
-# )
-
-
-# response = requests.get(
-#     'http://127.0.0.1:5000/adv/1',
-# )
-
-
-# response = requests.patch(
-#     'http://127.0.0.1:5000/adv/3',
-#     json = {'title': 'Второе объявление',
-#             'description': 'Обновлено',
-#             'owner': 3}
-# )
-
-
-# response = requests.delete(
-#     'http://127.0.0.1:5000/adv/2',
-# )
-
-
-
-
-# Запросы для пользователей
-
 response = requests.post(
-    'http://127.0.0.1:5000/user',
-    json = {'name': 'Петр1111',
-            'email': 'petya1@mail.ru',
-            'password': '11QWERTY4587'}
+    'http://127.0.0.1:5000/adv',
+    json = {'title': 'Холодильник',
+            'description': 'Отличный холодильник',
+            'owner': 'Иван'}
 )
 
 
 # response = requests.get(
-#     'http://127.0.0.1:5000/user/3',
+#     'http://127.0.0.1:5000/adv/56',
 # )
 
 
 # response = requests.patch(
-#     'http://127.0.0.1:5000/user/3',
-#     json = {'name': 'John',
-#             'email': 'john@mail.ru',
-#             'password': '12345qwe'}
+#     'http://127.0.0.1:5000/adv/6',
+#     json = {'title': 'Телевизор',
+#             'description': 'Хороший телевизор',
+#             }
 # )
 
 
 # response = requests.delete(
-#     'http://127.0.0.1:5000/user/
-
+#     'http://127.0.0.1:5000/adv/3',
 # )
-
 
 print(response.status_code)
 print(response.json())

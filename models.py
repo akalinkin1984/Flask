@@ -3,7 +3,7 @@ import os
 from atexit import register
 
 from dotenv import load_dotenv
-from sqlalchemy import Date, Integer, String, create_engine, ForeignKey
+from sqlalchemy import Date, Integer, String, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 
 
@@ -25,32 +25,14 @@ class Base(DeclarativeBase):
     pass
 
 
-class User(Base):
-    __tablename__ = 'users'
-
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    name: Mapped[str] = mapped_column(String(64), nullable=False)
-    email: Mapped[str] = mapped_column(String(128), unique=True, nullable=False)
-    password: Mapped[str] = mapped_column(String(72), nullable=False)
-
-    @property
-    def json(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'email': self.email
-        }
-
-
 class Advertisement(Base):
     __tablename__ = 'advertisement'
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    title: Mapped[str] = mapped_column(String(64), nullable=False)
-    description: Mapped[str] = mapped_column(String(256), nullable=False)
+    title: Mapped[str] = mapped_column(String(64), nullable=False, unique=True)
+    description: Mapped[str] = mapped_column(String(256), nullable=False, unique=True)
     create_date: Mapped[datetime.date] = mapped_column(Date, default=datetime.date.today())
-    owner: Mapped[int] = mapped_column(ForeignKey('user.id', ondelete='CASCADE'))
-    # owner: Mapped[int] = mapped_column(Integer, nullable=False, unique=True)
+    owner: Mapped[str] = mapped_column(String(64), nullable=False)
 
     @property
     def json(self):
